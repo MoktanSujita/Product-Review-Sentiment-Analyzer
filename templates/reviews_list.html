@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Product Reviews</h1>
+<form method="POST">
+    {% csrf_token %}
+    <input type="url" name="product_url" placeholder="Enter product URL" required>
+    <button type="submit">Analyze</button>
+</form>
+
+<ul>
+    {% for review in reviews %}
+        <li>{{ review.product_name }} - {{ review.sentiment }}</li>
+    {% empty %}
+        <li>No reviews yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
