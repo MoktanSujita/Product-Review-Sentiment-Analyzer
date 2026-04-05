@@ -7,11 +7,13 @@
     <button type="submit">Analyze</button>
 </form>
 
-<ul>
-    {% for review in reviews %}
-        <li>{{ review.product_name }} - {{ review.sentiment }}</li>
-    {% empty %}
-        <li>No reviews yet.</li>
-    {% endfor %}
-</ul>
+{% if result %}
+    <h2>Result:</h2>
+    <p>{{ result }}</p>
+{% endif %}
+
+{% if sentiment %}
+    <h2>Sentiment:</h2>
+    <p>{{ sentiment }}</p>
+{% endif %}
 {% endblock %}
