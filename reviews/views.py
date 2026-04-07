@@ -2,13 +2,22 @@ from django.shortcuts import render
 from textblob import TextBlob
 import requests
 from bs4 import BeautifulSoup
+
+from reviews.forms import ReviewForm
 # Create your views here.
-def home(request):
-    result = None
-    sentiment = None
+def analyze_review(request):
+    result = {"sentiment" :sentiment,
+              "polarity" : round(polarity, 2),
+              "text" : review or text
+            }
 
     if request.method == 'POST':
-        url = request.POST.get('url')
+        form = ReviewForm(request.POST)
+
+        if form.is_valid():
+            review = form.cleaned_data['review_text']
+        else:
+            url = None
 
         if not url:
             result = "Please enter a valid URL."
