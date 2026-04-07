@@ -1,19 +1,32 @@
-{% extends 'base.html' %}
-{% block content %}
-<h1>Product Reviews</h1>
+<h1>Product Review Analyzer</h1>
+
 <form method="POST">
     {% csrf_token %}
-    <input type="url" name="product_url" placeholder="Enter product URL" required>
+    
+    <textarea name="review_text" placeholder="Enter review..."></textarea><br>
+    
+    <input type="text" name="product_url" placeholder="Paste product URL"><br>
+    
     <button type="submit">Analyze</button>
 </form>
 
 {% if result %}
-    <h2>Result:</h2>
-    <p>{{ result }}</p>
-{% endif %}
+    <hr>
 
-{% if sentiment %}
-    <h2>Sentiment:</h2>
-    <p>{{ sentiment }}</p>
+    {% if result.error %}
+        <p style="color:red">{{ result.error }}</p>
+    {% endif %}
+
+    {% if result.type == "text" %}
+        <h3>Sentiment: {{ result.sentiment }}</h3>
+        <p>Polarity: {{ result.polarity }}</p>
+        <p>{{ result.content }}</p>
+    {% endif %}
+
+    {% if result.type == "url" %}
+        <h3>Total Reviews: {{ result.total }}</h3>
+        <p>Positive: {{ result.positive }}</p>
+        <p>Negative: {{ result.negative }}</p>
+        <p>Neutral: {{ result.neutral }}</p>
+    {% endif %}
 {% endif %}
-{% endblock %}
