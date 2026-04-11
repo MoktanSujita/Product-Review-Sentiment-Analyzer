@@ -1,0 +1,13 @@
+<h1>Analyze Review</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Analyze</button>
+</form>
+
+{% if result %}
+    <h2>Sentiment: {{ result.sentiment }}</h2>
+    <p>Polarity: {{ result.polarity }}</p>
+    <p>Analyzed Text: {{ result.text }}</p>
+{% endif %}
