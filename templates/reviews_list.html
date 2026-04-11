@@ -1,3 +1,17 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Review Analyzer</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+=======
 {% extends 'base.html' %}
 {% block content %}
 <h1>Product Reviews</h1>
@@ -6,14 +20,78 @@
     <input type="url" name="url" placeholder="Enter product URL" required>
     <button type="submit">Analyze</button>
 </form>
+>>>>>>> b9704e84662e296daabbaa946d7385b65a3299f1
 
-{% if result %}
-    <h2>Result:</h2>
-    <p>{{ result }}</p>
-{% endif %}
+        .box {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            width: 60%;
+            margin: auto;
+        }
 
-{% if sentiment %}
-    <h2>Sentiment:</h2>
-    <p>{{ sentiment }}</p>
-{% endif %}
-{% endblock %}
+        textarea, input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #38bdf8;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #334155;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h1>Product Review Analyzer</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            <textarea name="review_text" placeholder="Enter review..."></textarea><br>
+            <input type="text" name="product_url" placeholder="Paste product URL"><br>
+            <button type="submit">Analyze</button>
+        </form>
+
+        {% if result %}
+        <div class="result">
+
+            {% if result.error %}
+                <p style="color:red">{{ result.error }}</p>
+            {% endif %}
+
+            {% if result.type == "text" %}
+                <h2>{{ result.sentiment }}</h2>
+                <p>Polarity: {{ result.polarity }}</p>
+                <p>{{ result.content }}</p>
+            {% endif %}
+
+            {% if result.type == "url" %}
+                <h3>Total Reviews: {{ result.total }}</h3>
+                
+                    <p style="color: lightgreen;">Positive: {{ result.positive }}</p>
+                    <p style="color: red;">Negative: {{ result.negative }}</p>
+                    <p style="color: yellow;">Neutral: {{ result.neutral }}</p>
+                    
+
+                
+            {% endif %}
+
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
