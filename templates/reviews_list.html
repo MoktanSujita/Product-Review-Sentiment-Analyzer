@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,17 +11,6 @@
             text-align: center;
             padding: 40px;
         }
-=======
-{% extends 'base.html' %}
-{% block content %}
-<h1>Product Reviews</h1>
-<form method="POST">
-    {% csrf_token %}
-    <input type="url" name="url" placeholder="Enter product URL" required>
-    <button type="submit">Analyze</button>
-</form>
->>>>>>> b9704e84662e296daabbaa946d7385b65a3299f1
-
         .box {
             background: #1e293b;
             padding: 20px;
@@ -85,9 +74,6 @@
                     <p style="color: lightgreen;">Positive: {{ result.positive }}</p>
                     <p style="color: red;">Negative: {{ result.negative }}</p>
                     <p style="color: yellow;">Neutral: {{ result.neutral }}</p>
-                    
-
-                
             {% endif %}
 
         </div>
