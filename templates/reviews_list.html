@@ -69,11 +69,12 @@
             {% endif %}
 
             {% if result.type == "url" %}
-                <h3>Total Reviews: {{ result.total }}</h3>
+                <h3>Total Reviews: {{ result.total_reviews }}</h3>
                 
                     <p style="color: lightgreen;">Positive: {{ result.positive }}</p>
                     <p style="color: red;">Negative: {{ result.negative }}</p>
                     <p style="color: yellow;">Neutral: {{ result.neutral }}</p>
+                    <p style="color: cyan;">Overall Sentiment: {{ result.overall }}</p>
             {% endif %}
 
         </div>
