@@ -75,10 +75,35 @@
                     <p style="color: red;">Negative: {{ result.negative }}</p>
                     <p style="color: yellow;">Neutral: {{ result.neutral }}</p>
                     <p style="color: cyan;">Overall Sentiment: {{ result.overall }}</p>
+                    <h4>Top Positive Words:</h4>
+                    <ul>
+                        {% for word, count in result.top_positive_words %}
+                            <li>{{ word }} ({{ count }})</li>
+                        {% endfor %}
+                    </ul>
+                    <h4>Top Negative Words:</h4>
+                    <ul>
+                        {% for word, count in result.top_negative_words %}
+                            <li>{{ word }} ({{ count }})</li>
+                        {% endfor %}
+                    </ul>
+                    <h4>Top Neutral Words:</h4>
+                    <ul>
+                        {% for word, count in result.top_neutral_words %}
+                            <li>{{ word }} ({{ count }})</li>
+                        {% endfor %}
+                    </ul>
+                    <h4>Sample Reviews:</h4>
+                    <ul>
+                        {% for review in result.sample_reviews %}
+                            <li>{{ review }}</li>
+                        {% endfor %}
+                    </ul>   
             {% endif %}
 
         </div>
         {% endif %}
+        
     </div>
 </body>
 </html>
