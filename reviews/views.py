@@ -3,6 +3,7 @@ from textblob import TextBlob
 from bs4 import BeautifulSoup
 import requests
 import re
+from collections import Counter
 # Create your views here.
 def analyze_review(request):
     result = None
@@ -69,6 +70,10 @@ def analyze_review(request):
         
                 #  Initialize counters
                 positive = negative = neutral = 0
+                positive_reviews = []
+                negative_reviews = []
+                neutral_reviews = []
+
                 valid_reviews = 0
         
                 for review in reviews:
@@ -80,12 +85,35 @@ def analyze_review(request):
         
                     if polarity > 0.2:
                         positive += 1
+                        positive_reviews.append(review)
+
                     elif polarity < -0.2:
                         negative += 1
+                        negative_reviews.append(review)
                     else:
                         neutral += 1
+                        neutral_reviews.append(review)
         
                 total = valid_reviews
+
+                sample_positive = positive_reviews[:3]
+                sample_negative = negative_reviews[:3]
+                sample_neutral = neutral_reviews[:3]
+
+
+                def get_top_words(review_list):
+                    words = []
+
+                    for review in review_list:
+                        cleaned = re.sub(r'[^\w\s]','',review.lower())
+                        words.extend(cleaned.split())
+
+                    return Counter(words).most_common(5)
+                
+                top_neutral_words = get_top_words(neutral_reviews)
+                top_positive_words = get_top_words(positive_reviews)
+                top_negative_words = get_top_words(negative_reviews)
+                    
 
                 result = {
                     "type": "url",
@@ -95,15 +123,22 @@ def analyze_review(request):
                     "neutral": neutral,
                     "positive_percentage": round((positive / total) * 100, 2) if total else 0,
                     "negative_percentage": round((negative / total) * 100, 2) if total else 0,
-                    "overall":get_overall_sentiment(positive, negative, neutral)
+                    "overall":get_overall_sentiment(positive, negative, neutral),
+                    "top_positive_words": top_positive_words,
+                    "top_negative_words": top_negative_words,
+                    "top_neutral_words": top_neutral_words,
+                    "sample_positive": sample_positive,
+                    "sample_negative": sample_negative,
+                    "sample_neutral": sample_neutral,
                 }
 
             except Exception as e:
                 result = {"error": str(e)}
+                
     else:
         result= {"error": "please enter text or url"}
     return render(request, "reviews_list.html", {"result": result})
-    
+
 def get_sentiment_label(polarity):
     if polarity > 0.2:
         return "Positive"

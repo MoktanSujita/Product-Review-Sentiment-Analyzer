@@ -5,5 +5,6 @@ urlpatterns = [
 
     path('', views.analyze_review, name='review_analysis'), 
     path('', views.analyze_review, name='analyze'), 
+    
 
 ]
