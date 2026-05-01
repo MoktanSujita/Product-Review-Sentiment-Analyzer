@@ -101,12 +101,13 @@ def analyze_review(request):
                 sample_neutral = neutral_reviews[:3]
 
 
+                stop_words = {"the", "is", "in", "and", "to", "a", "of", "it", "for", "on", "with", "was", "as", "but", "are", "this", "that" , "xa" , "k"}
                 def get_top_words(review_list):
                     words = []
 
                     for review in review_list:
                         cleaned = re.sub(r'[^\w\s]','',review.lower())
-                        words.extend(cleaned.split())
+                        words.extend([w for w in cleaned.split() if w not in stop_words])
 
                     return Counter(words).most_common(5)
                 
