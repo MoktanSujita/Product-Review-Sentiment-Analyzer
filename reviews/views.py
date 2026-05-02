@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 from collections import Counter
+from .models import Review
 # Create your views here.
 def analyze_review(request):
     result = None
@@ -22,6 +23,11 @@ def analyze_review(request):
                "polarity":round(polarity, 2),
                "sentiment": get_sentiment_label(polarity)
            }
+           Review.objects.create(
+                product_name = review_text[:50],
+                product_url = "",
+                sentiment = result["sentiment"]
+            )
 
         elif product_url:
             try:
@@ -98,19 +104,7 @@ def analyze_review(request):
 
                 sample_positive = positive_reviews[:3]
                 sample_negative = negative_reviews[:3]
-                sample_neutral = neutral_reviews[:3]
-
-
-                stop_words = {"the", "is", "in", "and", "to", "a", "of", "it", "for", "on", "with", "was", "as", "but", "are", "this", "that" , "xa" , "k"}
-                def get_top_words(review_list):
-                    words = []
-
-                    for review in review_list:
-                        cleaned = re.sub(r'[^\w\s]','',review.lower())
-                        words.extend([w for w in cleaned.split() if w not in stop_words])
-
-                    return Counter(words).most_common(5)
-                
+                sample_neutral = neutral_reviews[:3]                
                 top_neutral_words = get_top_words(neutral_reviews)
                 top_positive_words = get_top_words(positive_reviews)
                 top_negative_words = get_top_words(negative_reviews)
@@ -132,6 +126,11 @@ def analyze_review(request):
                     "sample_negative": sample_negative,
                     "sample_neutral": sample_neutral,
                 }
+                Review.objects.create(
+                  product_name = product_url,
+                  product_url = product_url,
+                  sentiment = result["overall"]
+               )
 
             except Exception as e:
                 result = {"error": str(e)}
@@ -147,6 +146,17 @@ def get_sentiment_label(polarity):
         return "Negative"
     return "Neutral"
 
+
+stop_words = {"the", "is", "in", "and", "to", "a", "of", "it", "for", "on", "with", "was", "as", "but", "are", "this", "that" , "xa" , "k"}
+
+def get_top_words(review_list):
+    words = []
+    for review in review_list:
+        cleaned = re.sub(r'[^\w\s]','',review.lower())
+        words.extend([w for w in cleaned.split() if w not in stop_words])
+
+    return Counter(words).most_common(5)
+
 def get_overall_sentiment(positive, negative, neutral):
     if positive > negative and positive > neutral:
         return "Overall Positive"
@@ -154,4 +164,6 @@ def get_overall_sentiment(positive, negative, neutral):
         return "Overall Negative"
     else:
         return "Overall Neutral"
+    
+
 
