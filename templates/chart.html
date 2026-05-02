@@ -2,22 +2,74 @@
 
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Sentiment Chart</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
+  </head>
 
-<canvas id="sentimentChart" width="400" height="400"></canvas>
+  <body>
 
-<script src ="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="dashboard">
+      <h2 class="title">Sentiment Analysis</h2>
+      <p class="subtitle">Review sentiment analysis using Natural Language Processing</p>
 
-<script>
-  const sentimentData ={
-    positive : Number("{{result.positive|default:0}}"),
-    negative : Number("{{result.negative|default:0}}"),
-    neutral : Number("{{result.neutral |default:0}}")
-  };
-</script>
-</body>
+      <div class="kpi-container">
+
+        <div class="kpi positive">
+         <h3>{{result.positive}}</h3>
+         <p>Positive</p>
+         <p>{{result.positive_percentage}}%</p>
+        </div>
+
+        <div class="kpi negative">
+         <h3>{{result.negative}}</h3>
+         <p>Negative</p>
+         <p>{{result.negative_percentage}}%</p>
+        </div>
+
+        <div class="kpi neutral">
+         <h3>{{result.neutral}}</h3>
+          <p>Neutral</p>
+          <p>{{result.neutral_percentage}}%</p>
+        </div>
+
+      </div>
+      <div class="word-section">
+
+        <h3>Top Positive Words</h3>
+        {% for word, count in result.top_positive_words %}
+            <span class="tag positive">{{ word }} ({{ count }})</span>
+        {% endfor %}
+
+        <h3>Top Negative Words</h3>
+        {% for word, count in result.top_negative_words %}
+            <span class="tag negative">{{ word }} ({{ count }})</span>
+        {% endfor %}
+
+        <h3>Top Neutral Words</h3>
+        {% for word, count in result.top_neutral_words %}
+            <span class="tag neutral">{{ word }} ({{ count }})</span>
+        {% endfor %}
+      </div>
+
+      <div class="chart-header">
+        <h3>Sentiment Distribution</h3>
+        <p>Based on {{result.total_reviews}} reviews</p>
+      </div>
+
+      <div class="chart-card">
+        <canvas id="sentimentChart" width="400" height="400"></canvas>
+      </div>
+    </div>
+
+    <script>
+       const sentimentData ={
+       positive : Number("{{result.positive|default:0}}"),
+        negative : Number("{{result.negative|default:0}}"),
+        neutral : Number("{{result.neutral |default:0}}")
+      };
+    </script>
+  <script src="{% static 'js/chart.js' %}"> </script>
+  </body>
 </html>

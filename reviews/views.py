@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from unittest import result
+from django.shortcuts import render, redirect
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 import requests
@@ -118,6 +119,7 @@ def analyze_review(request):
                     "neutral": neutral,
                     "positive_percentage": round((positive / total) * 100, 2) if total else 0,
                     "negative_percentage": round((negative / total) * 100, 2) if total else 0,
+                    "neutral_percentage": round((neutral / total) * 100, 2) if total else 0,
                     "overall":get_overall_sentiment(positive, negative, neutral),
                     "top_positive_words": top_positive_words,
                     "top_negative_words": top_negative_words,
@@ -134,9 +136,13 @@ def analyze_review(request):
 
             except Exception as e:
                 result = {"error": str(e)}
+
+        request.session["result"] = result #store temporarily in session for chart use
+        return redirect("chart_page")
                 
     else:
         result= {"error": "please enter text or url"}
+    
     return render(request, "reviews_list.html", {"result": result})
 
 def get_sentiment_label(polarity):
@@ -155,7 +161,7 @@ def get_top_words(review_list):
         cleaned = re.sub(r'[^\w\s]','',review.lower())
         words.extend([w for w in cleaned.split() if w not in stop_words])
 
-    return Counter(words).most_common(5)
+    return Counter(words).most_common(3)
 
 def get_overall_sentiment(positive, negative, neutral):
     if positive > negative and positive > neutral:
@@ -165,5 +171,7 @@ def get_overall_sentiment(positive, negative, neutral):
     else:
         return "Overall Neutral"
     
-
+def chart_page(request):
+    result = request.session.get("result", {})
+    return render(request, "chart.html", {"result": result})
 
