@@ -70,7 +70,7 @@ product_analyzer/
 
 ### 1. Clone Repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/MoktanSujita/Product-Review-Sentiment-Analyzer.git
 cd product_analyzer
 ```
 
